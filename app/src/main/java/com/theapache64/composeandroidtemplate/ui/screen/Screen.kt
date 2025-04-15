@@ -3,6 +3,7 @@ package com.theapache64.composeandroidtemplate.ui.screen
 sealed class Screen(val route: String) {
     object Splash : Screen("splash")
     object Dashboard : Screen("dashboard")
+    object Second : Screen("second")
     // Wondering how we pass arguments using this strucure?
     // See here -> https://github.com/chrisbanes/tivi/blob/add9b7d65633596fcebe32df5ef9ae9b40b1846f/app/src/main/java/app/tivi/AppNavigation.kt#L70
 }

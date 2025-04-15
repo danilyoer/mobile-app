@@ -18,6 +18,7 @@ import com.theapache64.composeandroidtemplate.ui.screen.dashboard.DashboardScree
 import com.theapache64.composeandroidtemplate.ui.screen.splash.SplashScreen
 import com.theapache64.composeandroidtemplate.ui.theme.ComposeAndroidTemplateTheme
 import dagger.hilt.android.AndroidEntryPoint
+import com.theapache64.composeandroidtemplate.ui.screen.splash.SecondScreen
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -46,12 +47,12 @@ class MainActivity : ComponentActivity() {
             // Splash
             composable(Screen.Splash.route) {
                 SplashScreen(onSplashFinished = {
-                    val options =
-                        NavOptions.Builder().setPopUpTo(Screen.Splash.route, inclusive = true)
-                            .build()
-                    navController.navigate(
-                        Screen.Dashboard.route, options
-                    ) // Move to dashboard
+                    val options = NavOptions.Builder()
+                        .setPopUpTo(Screen.Splash.route, inclusive = true)
+                        .build()
+                    navController.navigate(Screen.Dashboard.route, options)
+                }, onGoToSecond = {
+                    navController.navigate(Screen.Second.route)
                 })
             }
 
@@ -59,6 +60,16 @@ class MainActivity : ComponentActivity() {
             composable(Screen.Dashboard.route) {
                 DashboardScreen()
             }
+
+            // Second Screen
+            composable(Screen.Second.route) {
+                SecondScreen()
+            }
         }
     }
+
+
+
+
 }
+

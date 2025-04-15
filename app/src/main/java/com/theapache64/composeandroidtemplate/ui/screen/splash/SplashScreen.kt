@@ -1,17 +1,12 @@
 package com.theapache64.composeandroidtemplate.ui.screen.splash
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -22,6 +17,7 @@ import com.theapache64.composeandroidtemplate.R
 fun SplashScreen(
     viewModel: SplashViewModel = hiltViewModel(),
     onSplashFinished: () -> Unit,
+    onGoToSecond: () -> Unit,
 ) {
     val isSplashFinished by viewModel.isSplashFinished.collectAsState(initial = false)
 
@@ -34,17 +30,53 @@ fun SplashScreen(
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
+        Column(
+            modifier = Modifier
+                .align(Alignment.Center)
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            // Приветствие (используем строку из ресурсов)
+            Text(
+                text = stringResource(id = R.string.label_hello_world), // "Hello World!"
+                style = MaterialTheme.typography.h3
+            )
 
-        // Logo
+            Spacer(modifier = Modifier.height(30.dp))
+
+            // Кнопка "Click Me"
+            Button(onClick = {
+                // Обработчик клика для "Click Me!"
+                // Можешь добавить свою логику здесь
+            }) {
+                Text(text = stringResource(id = R.string.action_click_me)) // "Click Me!"
+            }
+
+            // ⬇⬇⬇ ДОБАВЛЕННАЯ КНОПКА "Второй экран" ⬇⬇⬇
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = onGoToSecond,
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = Color.Blue,
+                    contentColor = Color.White
+                )
+            ) {
+                Text("Второй экран") // Текст для кнопки
+            }
+        }
+
+        // Логотип
         Image(
             painter = painterResource(id = R.drawable.ic_compose_logo),
             contentDescription = stringResource(id = R.string.cd_app_logo),
             modifier = Modifier
-                .size(200.dp)
-                .align(Alignment.Center),
+                .size(220.dp)
+                .align(Alignment.TopCenter)
+                .padding(top = 32.dp)
         )
 
-        // Version number
+        // Версия
         val versionName by viewModel.versionName.collectAsState()
         Text(
             text = versionName,
