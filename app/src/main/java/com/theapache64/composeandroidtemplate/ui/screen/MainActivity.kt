@@ -18,7 +18,9 @@ import com.theapache64.composeandroidtemplate.ui.screen.dashboard.DashboardScree
 import com.theapache64.composeandroidtemplate.ui.screen.splash.SplashScreen
 import com.theapache64.composeandroidtemplate.ui.theme.ComposeAndroidTemplateTheme
 import dagger.hilt.android.AndroidEntryPoint
-import com.theapache64.composeandroidtemplate.ui.screen.splash.SecondScreen
+import com.theapache64.composeandroidtemplate.ui.screen.secondscreen.SecondScreen
+import com.theapache64.composeandroidtemplate.ui.screen.createhabit.CreateHabitScreen
+
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -46,15 +48,22 @@ class MainActivity : ComponentActivity() {
 
             // Splash
             composable(Screen.Splash.route) {
-                SplashScreen(onSplashFinished = {
-                    val options = NavOptions.Builder()
-                        .setPopUpTo(Screen.Splash.route, inclusive = true)
-                        .build()
-                    navController.navigate(Screen.Dashboard.route, options)
-                }, onGoToSecond = {
-                    navController.navigate(Screen.Second.route)
-                })
+                SplashScreen(
+                    onSplashFinished = {
+                        val options = NavOptions.Builder()
+                            .setPopUpTo(Screen.Splash.route, inclusive = true)
+                            .build()
+                        navController.navigate(Screen.Dashboard.route, options)
+                    },
+                    onGoToSecond = {
+                        navController.navigate(Screen.Second.route)
+                    },
+                    onGoToCreateHabit = {
+                        navController.navigate(Screen.CreateHabit.route)
+                    }
+                )
             }
+
 
             // Dashboard
             composable(Screen.Dashboard.route) {
@@ -63,13 +72,17 @@ class MainActivity : ComponentActivity() {
 
             // Second Screen
             composable(Screen.Second.route) {
-                SecondScreen()
+                SecondScreen(
+                    onBackToSplash = {
+                        navController.navigate(Screen.Splash.route)
+                    }
+                )
             }
+            composable(Screen.CreateHabit.route) {
+                CreateHabitScreen()
+            }
+
         }
     }
-
-
-
-
 }
 

@@ -18,6 +18,7 @@ fun SplashScreen(
     viewModel: SplashViewModel = hiltViewModel(),
     onSplashFinished: () -> Unit,
     onGoToSecond: () -> Unit,
+    onGoToCreateHabit: () -> Unit
 ) {
     val isSplashFinished by viewModel.isSplashFinished.collectAsState(initial = false)
 
@@ -45,15 +46,16 @@ fun SplashScreen(
             Spacer(modifier = Modifier.height(30.dp))
 
             // Кнопка "Click Me"
-            Button(onClick = {
-                // Обработчик клика для "Click Me!"
-                // Можешь добавить свою логику здесь
-            }) {
-                Text(text = stringResource(id = R.string.action_click_me)) // "Click Me!"
+            Button(
+                onClick = onGoToCreateHabit,  // Этот обработчик будет передаваться при переходе
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = Color.Blue,
+                    contentColor = Color.White
+                )
+            ) {
+                Text("Создать привычку") // Текст для кнопки
             }
 
-            // ⬇⬇⬇ ДОБАВЛЕННАЯ КНОПКА "Второй экран" ⬇⬇⬇
-            Spacer(modifier = Modifier.height(16.dp))
 
             Button(
                 onClick = onGoToSecond,
@@ -81,8 +83,6 @@ fun SplashScreen(
         Text(
             text = versionName,
             modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 20.dp)
         )
     }
 }

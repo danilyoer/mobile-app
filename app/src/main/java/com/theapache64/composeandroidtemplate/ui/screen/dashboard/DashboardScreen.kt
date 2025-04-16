@@ -25,10 +25,7 @@ import com.theapache64.composeandroidtemplate.R
 fun DashboardScreen(
     viewModel: DashboardViewModel = hiltViewModel(),
 ) {
-
     ReportDrawn()
-
-
     Column(
         modifier = Modifier
             .fillMaxSize()
