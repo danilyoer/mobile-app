@@ -1,5 +1,9 @@
 package com.theapache64.composeandroidtemplate.ui.screen.createhabit
-
+import androidx.compose.ui.platform.LocalContext
+import com.theapache64.composeandroidtemplate.data.model.Habit
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import java.io.File
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -8,15 +12,15 @@ import androidx.compose.ui.unit.dp
 import com.theapache64.composeandroidtemplate.ui.composable.*
 
 @Composable
-fun CreateHabitScreen(onNavigateBackToMain: () -> Unit) {
-
-    // Состояния для полей ввода
+fun CreateHabitScreen(onNavigateBackToMain: () -> Unit,
+                      onNavigateToSecondScreen: () -> Unit)
+ {
+    val context = LocalContext.current
     var habitName by remember { mutableStateOf("") }
     var selectedFrequency by remember { mutableStateOf(frequencies.first()) }
     var selectedCategory by remember { mutableStateOf(categories.first()) }
     var time by remember { mutableStateOf("") }
     var isReminderEnabled by remember { mutableStateOf(true) }
-
     var isFrequencyDropdownExpanded by remember { mutableStateOf(false) }
     var isCategoryDropdownExpanded by remember { mutableStateOf(false) } // Состояния для отображения выпадающих списков
 
@@ -25,19 +29,13 @@ fun CreateHabitScreen(onNavigateBackToMain: () -> Unit) {
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // Верхняя панель с кнопкой "Назад" и заголовком
+
         BackButtonRow(onBack = onNavigateBackToMain)
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Поле "Название привычки"
         HabitNameField(habitName) { habitName = it }
-
-
-
-
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Выпадающий список "Частота"
         FrequencyDropdown(
             selectedFrequency,
             isFrequencyDropdownExpanded,
@@ -47,15 +45,12 @@ fun CreateHabitScreen(onNavigateBackToMain: () -> Unit) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Поле "Время выполнения"
         TimeField(time) { time = it }
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Переключатель "Включить напоминания"
         ReminderSwitch(isReminderEnabled) { isReminderEnabled = it }
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Выпадающий список "Категория"
         CategoryDropdown(
             selectedCategory,
             isCategoryDropdownExpanded,
@@ -64,8 +59,29 @@ fun CreateHabitScreen(onNavigateBackToMain: () -> Unit) {
         )
         Spacer(modifier = Modifier.weight(1f))
 
-        // Кнопки "Сохранить" и "Отмена"
-        ActionButtons( onCancel = onNavigateBackToMain, onSave = { /* потом */ })
+        ActionButtons(
+            onCancel = onNavigateBackToMain,
+            onSave = {
+                val habit = Habit(
+                    name = habitName,
+                    frequency = selectedFrequency,
+                    category = selectedCategory,
+                    time = time,
+                    reminderEnabled = isReminderEnabled
+                )
+
+                val json = Json.encodeToString(habit)
+                val dir = File(context.filesDir, "habits")
+                dir.mkdirs()
+
+                val fileName = "habit_${System.currentTimeMillis()}.json"
+                val file = File(dir, fileName)
+                file.writeText(json)
+
+                onNavigateToSecondScreen()
+            }
+        )
+
     }
 }
 

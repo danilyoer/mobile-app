@@ -28,10 +28,15 @@ fun ReusableDropdown(
             trailingIcon = {
                 Icon(
                     imageVector = Icons.Default.ArrowDropDown,
-                    contentDescription = null,
-                    modifier = Modifier.clickable { onExpandedChange(true) }
+                    contentDescription = null
                 )
             }
+        )
+        // ловим клик через прозрачный Box
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .clickable { onExpandedChange(true) }
         )
         DropdownMenu(
             expanded = expanded,
@@ -48,3 +53,6 @@ fun ReusableDropdown(
         }
     }
 }
+
+
+

@@ -81,10 +81,14 @@ class MainActivity : ComponentActivity() {
             composable(Screen.CreateHabit.route) {
                 CreateHabitScreen(
                     onNavigateBackToMain = {
-                        navController.popBackStack() // ← возвращаемся на предыдущий экран (Dashboard)
+                        navController.popBackStack()
+                    },
+                    onNavigateToSecondScreen = {
+                        navController.navigate(Screen.Second.route)
                     }
                 )
             }
+
 
 
         }
