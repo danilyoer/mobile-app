@@ -12,7 +12,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun BackButtonRow() {
+fun BackButtonRow(onBack: () -> Unit) {
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.fillMaxWidth()
@@ -20,7 +21,7 @@ fun BackButtonRow() {
         Text(
             text = "Назад",
             modifier = Modifier
-                .clickable { /* Обработчик нажатия */ }
+                .clickable { onBack() }
                 .padding(8.dp),
             color = MaterialTheme.colors.primary
         )

@@ -3,13 +3,13 @@ package com.theapache64.composeandroidtemplate.ui.screen.createhabit
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.theapache64.composeandroidtemplate.ui.composable.*
 
 @Composable
-fun CreateHabitScreen() {
+fun CreateHabitScreen(onNavigateBackToMain: () -> Unit) {
+
     // Состояния для полей ввода
     var habitName by remember { mutableStateOf("") }
     var selectedFrequency by remember { mutableStateOf(frequencies.first()) }
@@ -26,11 +26,15 @@ fun CreateHabitScreen() {
             .padding(16.dp)
     ) {
         // Верхняя панель с кнопкой "Назад" и заголовком
-        BackButtonRow()
+        BackButtonRow(onBack = onNavigateBackToMain)
         Spacer(modifier = Modifier.height(32.dp))
 
         // Поле "Название привычки"
         HabitNameField(habitName) { habitName = it }
+
+
+
+
         Spacer(modifier = Modifier.height(16.dp))
 
         // Выпадающий список "Частота"
@@ -61,39 +65,10 @@ fun CreateHabitScreen() {
         Spacer(modifier = Modifier.weight(1f))
 
         // Кнопки "Сохранить" и "Отмена"
-        ActionButtons()
+        ActionButtons( onCancel = onNavigateBackToMain, onSave = { /* потом */ })
     }
 }
 
-@Composable
-fun ActionButtons() {
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Button(
-            onClick = { /* Обработчик сохранения */ },
-            colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp)
-        ) {
-            Text(text = "Сохранить", color = MaterialTheme.colors.onPrimary)
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Button(
-            onClick = { /* Обработчик отмены */ },
-            colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.onSurface.copy(alpha = 0.12f)),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(45.dp)
-        ) {
-            Text(text = "Отмена", color = MaterialTheme.colors.onSurface)
-        }
-    }
-}
 
 // Списки опций для выпадающих списков
 private val frequencies = listOf("Ежедневно", "Еженедельно", "Через день", "Раз в месяц")
