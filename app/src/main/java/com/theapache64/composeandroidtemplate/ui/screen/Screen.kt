@@ -5,5 +5,8 @@ sealed class Screen(val route: String) {
     object Dashboard : Screen("dashboard")
     object Second : Screen("second")
     object CreateHabit : Screen("create_habit")
+    object HabitDetail : Screen("habit_detail/{fileName}") {
+        fun createRoute(fileName: String): String = "habit_detail/$fileName"
+    }
 
 }

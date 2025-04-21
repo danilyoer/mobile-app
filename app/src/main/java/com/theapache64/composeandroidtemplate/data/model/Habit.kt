@@ -8,5 +8,6 @@ data class Habit(
     val frequency: String,
     val category: String,
     val time: String,
-    val reminderEnabled: Boolean
+    val reminderEnabled: Boolean,
+    val createdAt: Long
 )

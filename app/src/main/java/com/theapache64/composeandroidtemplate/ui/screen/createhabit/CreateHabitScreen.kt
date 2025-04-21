@@ -67,7 +67,8 @@ fun CreateHabitScreen(onNavigateBackToMain: () -> Unit,
                     frequency = selectedFrequency,
                     category = selectedCategory,
                     time = time,
-                    reminderEnabled = isReminderEnabled
+                    reminderEnabled = isReminderEnabled,
+                    createdAt = System.currentTimeMillis()
                 )
 
                 val json = Json.encodeToString(habit)

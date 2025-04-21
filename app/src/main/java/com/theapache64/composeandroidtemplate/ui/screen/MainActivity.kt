@@ -20,6 +20,9 @@ import com.theapache64.composeandroidtemplate.ui.theme.ComposeAndroidTemplateThe
 import dagger.hilt.android.AndroidEntryPoint
 import com.theapache64.composeandroidtemplate.ui.screen.secondscreen.SecondScreen
 import com.theapache64.composeandroidtemplate.ui.screen.createhabit.CreateHabitScreen
+import androidx.navigation.navArgument
+import com.theapache64.composeandroidtemplate.ui.screen.habitdetail.HabitDetailScreen
+import androidx.navigation.NavType
 
 
 @AndroidEntryPoint
@@ -73,11 +76,14 @@ class MainActivity : ComponentActivity() {
             // Second Screen
             composable(Screen.Second.route) {
                 SecondScreen(
+                    navController = navController,
                     onBackToSplash = {
                         navController.navigate(Screen.Splash.route)
                     }
                 )
             }
+
+            //CreateHabit
             composable(Screen.CreateHabit.route) {
                 CreateHabitScreen(
                     onNavigateBackToMain = {
@@ -87,6 +93,20 @@ class MainActivity : ComponentActivity() {
                         navController.navigate(Screen.Second.route)
                     }
                 )
+            }
+            //habit detail
+            composable(
+                route = Screen.HabitDetail.route,
+                arguments = listOf(
+                    navArgument("fileName") {
+                        type = NavType.StringType
+                        defaultValue = ""
+                    }
+                )
+
+            ) { backStackEntry ->
+                val fileName = backStackEntry.arguments?.getString("fileName") ?: ""
+                HabitDetailScreen(fileName = fileName)
             }
 
 
