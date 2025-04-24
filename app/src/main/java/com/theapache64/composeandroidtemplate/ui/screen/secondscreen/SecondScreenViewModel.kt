@@ -4,18 +4,20 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import com.theapache64.composeandroidtemplate.data.model.Habit
 import java.io.File
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import com.theapache64.composeandroidtemplate.data.model.HabitItem
+
 
 @HiltViewModel
 class SecondScreenViewModel @Inject constructor() : ViewModel() {
 
-    private val _habits = MutableStateFlow<List<Habit>>(emptyList())
+    private val _habits = MutableStateFlow<List<HabitItem>>(emptyList())
     val habits = _habits.asStateFlow()
+
 
     fun loadHabits(context: Context) {
         val dir = File(context.filesDir, "habits")
@@ -26,11 +28,15 @@ class SecondScreenViewModel @Inject constructor() : ViewModel() {
             ?.mapNotNull { file ->
                 try {
                     val json = file.readText()
-                    Json.decodeFromString<Habit>(json)
+                    val habit = Json.decodeFromString<Habit>(json)
+                    HabitItem(habit, file.name)
                 } catch (e: Exception) {
                     null
                 }
-            } ?: emptyList()
+            }
+            ?.sortedByDescending { it.habit.createdAt } // ← сортируем по дате
+            ?: emptyList()
+
 
         _habits.value = habitList
     }

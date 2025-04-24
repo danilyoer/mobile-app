@@ -106,7 +106,11 @@ class MainActivity : ComponentActivity() {
 
             ) { backStackEntry ->
                 val fileName = backStackEntry.arguments?.getString("fileName") ?: ""
-                HabitDetailScreen(fileName = fileName)
+                HabitDetailScreen(
+                    fileName = fileName,
+                    onBack = { navController.popBackStack() }
+                )
+
             }
 
 

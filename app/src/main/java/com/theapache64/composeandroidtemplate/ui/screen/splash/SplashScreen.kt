@@ -64,7 +64,7 @@ fun SplashScreen(
                     contentColor = Color.White
                 )
             ) {
-                Text("Второй экран") // Текст для кнопки
+                Text("Мои привычки")
             }
         }
 

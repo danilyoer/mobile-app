@@ -3,7 +3,7 @@ import androidx.navigation.NavController
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import com.theapache64.composeandroidtemplate.ui.screen.Screen
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -12,11 +12,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.theapache64.composeandroidtemplate.data.model.Habit
-import com.theapache64.composeandroidtemplate.ui.screen.Screen
+import androidx.compose.foundation.lazy.items
+
 
 
 @Composable
-fun SecondScreen(navController: NavController, onBackToSplash: () -> Unit) {
+fun SecondScreen(
+    navController: NavController,
+    onBackToSplash: () -> Unit
+) {
     val context = LocalContext.current
     val viewModel: SecondScreenViewModel = hiltViewModel()
     val habitList by viewModel.habits.collectAsState()
@@ -25,11 +29,12 @@ fun SecondScreen(navController: NavController, onBackToSplash: () -> Unit) {
         viewModel.loadHabits(context)
     }
 
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(16.dp)
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
     ) {
-
+        // Кнопка "Назад"
         Button(
             onClick = onBackToSplash,
             modifier = Modifier
@@ -39,20 +44,31 @@ fun SecondScreen(navController: NavController, onBackToSplash: () -> Unit) {
             Text("Назад")
         }
 
-        Text("Сохранённые привычки", style = MaterialTheme.typography.h6)
+        // Заголовок
+        Text(
+            text = "Сохранённые привычки",
+            style = MaterialTheme.typography.h6
+        )
+
         Spacer(modifier = Modifier.height(16.dp))
 
         LazyColumn {
-            items(habitList) { habit ->
-                HabitCard(habit = habit, onClick = {
-                    val fileName = "habit_${habit.createdAt}.json"
-                    navController.navigate(Screen.HabitDetail.createRoute(fileName))
-                })
-
+            items(
+                items = habitList, // список
+                key = { it.fileName } // ключ
+            ) { habitItem ->
+                HabitCard(
+                    habit = habitItem.habit,
+                    onClick = {
+                        navController.navigate(Screen.HabitDetail.createRoute(habitItem.fileName))
+                    }
+                )
             }
         }
+
     }
 }
+
 
 @Composable
 fun HabitCard(habit: Habit, onClick: () -> Unit) {
