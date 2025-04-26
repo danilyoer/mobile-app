@@ -125,9 +125,10 @@ fun HabitDetailContent(
 
             HabitCalendar(
                 completedDates = habit.completedDates.map { LocalDate.parse(it) }.toSet(),
+                targetDates = targetDates,  // Передаем целевые дни
                 selectedDate = LocalDate.now(),
                 isSelectable = false,
-                onDayClick = {} // Клик больше не нужен, потому что запрещён
+                onDayClick = {}
             )
         }
 
