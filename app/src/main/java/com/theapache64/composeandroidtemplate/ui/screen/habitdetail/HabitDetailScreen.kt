@@ -16,6 +16,7 @@ import java.util.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.viewinterop.AndroidView
 import android.widget.CalendarView
+import com.theapache64.composeandroidtemplate.ui.composable.HabitCalendar
 
 @Composable
 fun HabitDetailScreen(fileName: String, onBack: () -> Unit = {}) {
@@ -97,16 +98,8 @@ fun HabitDetailContent(habit: Habit, fileName: String, onBack: () -> Unit) {
         Spacer(modifier = Modifier.height(24.dp))
 
         // Календарик
-        AndroidView(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(300.dp),
-            factory = { context ->
-                CalendarView(context).apply {
-                    setBackgroundColor(android.graphics.Color.WHITE)
-                }
-            }
-        )
+        HabitCalendar()
+
 
         Spacer(modifier = Modifier.height(24.dp))
 
