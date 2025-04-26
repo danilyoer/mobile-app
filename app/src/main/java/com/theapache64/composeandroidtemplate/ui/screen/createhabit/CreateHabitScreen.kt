@@ -141,7 +141,4 @@ private fun getMaxDaysForFrequency(frequency: String): Int {
     }
 }
 
-
-
-// Списки для выпадающих списков
 private val categories = listOf("Здоровье", "Продуктивность", "Спорт", "Обучение", "Другое")
