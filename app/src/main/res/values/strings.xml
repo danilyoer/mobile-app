@@ -4,4 +4,9 @@
     <string name="action_click_me">Пустая кнопка!</string>
     <string name="label_hello_world">Hello World!</string>
     <string name="label_hello_compose">Hello Compose!</string>
+    <string name="daily">Ежедневно</string>
+    <string name="every_other_day">Через день</string>
+    <string name="weekly">Еженедельно</string>
+    <string name="monthly">Раз в месяц</string>
+
 </resources>

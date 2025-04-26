@@ -10,8 +10,13 @@ import androidx.compose.ui.Modifier
 fun HabitNameField(habitName: String, onValueChange: (String) -> Unit) {
     OutlinedTextField(
         value = habitName,
-        onValueChange = onValueChange,
+        onValueChange = { newText ->
+            if (newText.length <= 35) {
+                onValueChange(newText)
+            }
+        },
         label = { Text("Название привычки") },
+        placeholder = { Text("Название от 3 до 35 символов") },
         modifier = Modifier.fillMaxWidth()
     )
 }

@@ -9,12 +9,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 
 @Composable
-fun TimeField(time: String, onValueChange: (String) -> Unit) {
+fun TimeField(time: String, onValueChange: (String) -> Unit, maxDays: Int) {
     OutlinedTextField(
         value = time,
         onValueChange = onValueChange,
         label = { Text("Время выполнения") },
-        modifier = Modifier.fillMaxWidth(),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        placeholder = { Text("От 1 до $maxDays") },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        modifier = Modifier.fillMaxWidth()
     )
 }

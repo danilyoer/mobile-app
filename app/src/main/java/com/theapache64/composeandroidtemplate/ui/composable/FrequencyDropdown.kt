@@ -7,13 +7,12 @@ fun FrequencyDropdown(
     selectedFrequency: String,
     isDropdownExpanded: Boolean,
     onFrequencySelected: (String) -> Unit,
-    onDropdownExpandedChange: (Boolean) -> Unit
+    onDropdownExpandedChange: (Boolean) -> Unit,
+    options: List<String>
 ) {
-    val frequencies = listOf("Ежедневно", "Еженедельно", "Через день", "Раз в месяц")
-
     ReusableDropdown(
         label = "Частота",
-        options = frequencies,
+        options = options, // <-- используем переданный список
         selectedValue = selectedFrequency,
         expanded = isDropdownExpanded,
         onValueSelected = onFrequencySelected,
