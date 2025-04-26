@@ -55,7 +55,7 @@ fun HabitCalendar(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .height(300.dp)
+            .height(400.dp)
             .padding(8.dp)
     ) {
         CalendarHeader(

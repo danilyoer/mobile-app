@@ -48,7 +48,6 @@ fun HabitDetailScreen(fileName: String, onBack: () -> Unit = {}) {
     }
 }
 
-
 @Composable
 fun HabitDetailContent(
     habitState: MutableState<Habit?>,
@@ -59,15 +58,8 @@ fun HabitDetailContent(
     val habit = habitState.value
     val context = LocalContext.current
     val targetDates = remember(habit) {
-        habit?.let {
-            val dates = calculateTargetDates(it)
-            println("Target Dates: $dates") // Логируем результат целевых дат
-            dates
-        } ?: emptySet()
+        habit?.let { calculateTargetDates(it) } ?: emptySet()
     }
-
-
-
 
     val dateFormatted = remember(habit?.createdAt) {
         habit?.createdAt?.let {
@@ -76,12 +68,15 @@ fun HabitDetailContent(
         } ?: ""
     }
 
+    // Устанавливаем текущую дату, если она не выбрана
     LaunchedEffect(Unit) {
         if (selectedDate.value == null) {
             selectedDate.value = LocalDate.now()
         }
     }
 
+    // Логика для скрытия кнопки, если день уже выполнен
+    val isCompletedToday = habit?.completedDates?.contains(selectedDate.value.toString()) ?: false
 
     Column(
         modifier = Modifier
@@ -130,13 +125,10 @@ fun HabitDetailContent(
 
             HabitCalendar(
                 completedDates = habit.completedDates.map { LocalDate.parse(it) }.toSet(),
-                targetDates = targetDates,  // передаем целевые дни
                 selectedDate = LocalDate.now(),
                 isSelectable = false,
-                onDayClick = {} // клик больше не нужен
+                onDayClick = {} // Клик больше не нужен, потому что запрещён
             )
-
-
         }
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -156,7 +148,8 @@ fun HabitDetailContent(
             Text("Удалить привычку", color = MaterialTheme.colors.onError)
         }
 
-        if (selectedDate.value != null) {
+        // Кнопка "Выполнено", если день не выполнен
+        if (selectedDate.value != null && !isCompletedToday) {
             Spacer(modifier = Modifier.height(8.dp))
             Button(
                 onClick = {
@@ -184,6 +177,10 @@ fun HabitDetailContent(
         }
     }
 }
+
+
+
+
 private fun calculateTargetDates(habit: Habit): Set<LocalDate> {
     val startDate = Instant.ofEpochMilli(habit.createdAt)
         .atZone(ZoneId.systemDefault())
