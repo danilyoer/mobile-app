@@ -9,5 +9,6 @@ data class Habit(
     val category: String,
     val time: String,
     val reminderEnabled: Boolean,
-    val createdAt: Long
+    val createdAt: Long,
+    val completedDates: List<String> = emptyList() // новое поле для выполненных дат
 )

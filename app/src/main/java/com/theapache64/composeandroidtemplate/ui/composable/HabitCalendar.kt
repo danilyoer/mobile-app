@@ -5,6 +5,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -15,13 +16,12 @@ import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.*
-import androidx.compose.material.Text
-
 
 @Composable
 fun HabitCalendar(
     modifier: Modifier = Modifier,
-    onDayClick: (LocalDate) -> Unit = {}
+    onDayClick: (LocalDate) -> Unit = {},
+    completedDates: Set<LocalDate> = emptySet()
 ) {
     var currentMonth by remember { mutableStateOf(YearMonth.now()) }
     var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
@@ -81,6 +81,7 @@ fun HabitCalendar(
                     CalendarDay(
                         day = day,
                         isSelected = day == selectedDate,
+                        isCompleted = completedDates.contains(day),
                         onClick = {
                             if (day != LocalDate.MIN) {
                                 selectedDate = day

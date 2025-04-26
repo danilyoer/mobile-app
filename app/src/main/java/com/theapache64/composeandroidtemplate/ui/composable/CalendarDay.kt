@@ -19,12 +19,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import java.time.LocalDate
 
-
-
 @Composable
 fun CalendarDay(
     day: LocalDate,
     isSelected: Boolean,
+    isCompleted: Boolean,
     onClick: () -> Unit
 ) {
     Box(
@@ -36,10 +35,21 @@ fun CalendarDay(
         if (day != LocalDate.MIN) {
             val animatedFontSize by animateFloatAsState(targetValue = if (isSelected) 18f else 14f)
 
+            if (isCompleted) {
+                Canvas(modifier = Modifier.fillMaxSize()) {
+                    drawCircle(
+                        color = Color(0xFF4CAF50), // Зеленый цвет для выполнения
+                        radius = size.minDimension / 2.5f,
+                        center = Offset(size.width / 2, size.height / 2),
+                        alpha = 0.3f // чуть прозрачный
+                    )
+                }
+            }
+
             if (isSelected) {
                 Canvas(modifier = Modifier.fillMaxSize()) {
                     drawCircle(
-                        color = Color(0xFF3700B3),
+                        color = Color(0xFF3700B3), // Фиолетовый пунктир
                         radius = size.minDimension / 2.5f,
                         center = Offset(size.width / 2, size.height / 2),
                         style = Stroke(
