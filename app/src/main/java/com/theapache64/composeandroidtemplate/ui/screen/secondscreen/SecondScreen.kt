@@ -72,6 +72,9 @@ fun SecondScreen(
 
 @Composable
 fun HabitCard(habit: Habit, onClick: () -> Unit) {
+    val completedDays = habit.completedDates.size
+    val totalDays = habit.time.toIntOrNull() ?: 0
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -79,12 +82,29 @@ fun HabitCard(habit: Habit, onClick: () -> Unit) {
             .clickable { onClick() },
         elevation = 4.dp
     ) {
-        Column(modifier = Modifier.padding(12.dp)) {
-            Text("Название: ${habit.name}")
-            Text("Категория: ${habit.category}")
-            Text("Частота: ${habit.frequency}")
-            Text("Напоминания: ${if (habit.reminderEnabled) "Да" else "Нет"}")
+        Row(
+            modifier = Modifier
+                .padding(12.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column {
+                Text("Название: ${habit.name}")
+                Text("Категория: ${habit.category}")
+                Text("Частота: ${habit.frequency}")
+                Text("Напоминания: ${if (habit.reminderEnabled) "Да" else "Нет"}")
+            }
+
+            if (totalDays > 0) {
+                Text(
+                    text = "$completedDays / $totalDays",
+                    style = MaterialTheme.typography.body1,
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+            }
         }
     }
 }
+
 

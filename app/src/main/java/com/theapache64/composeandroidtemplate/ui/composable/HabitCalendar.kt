@@ -21,21 +21,28 @@ import java.util.*
 fun HabitCalendar(
     modifier: Modifier = Modifier,
     onDayClick: (LocalDate) -> Unit = {},
-    completedDates: Set<LocalDate> = emptySet()
+    completedDates: Set<LocalDate> = emptySet(),
+    selectedDate: LocalDate? = null,
+    isSelectable: Boolean = true,
+    targetDates: Set<LocalDate> = emptySet()
 ) {
     var currentMonth by remember { mutableStateOf(YearMonth.now()) }
-    var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
 
+    // Определяем первый день месяца (начиная с понедельника)
+    val firstDayOfMonth = currentMonth.atDay(1)
+    val firstDayOfWeek = (firstDayOfMonth.dayOfWeek.value - 1 + 7) % 7  // Понедельник = 0, воскресенье = 6
+
+    // Создаём список дней месяца
     val days = remember(currentMonth) {
-        val firstDayOfMonth = currentMonth.atDay(1)
         val lastDayOfMonth = currentMonth.atEndOfMonth()
         val daysInMonth = mutableListOf<LocalDate>()
 
-        val firstDayOfWeek = firstDayOfMonth.dayOfWeek.value % 7
+        // Добавляем пустые ячейки перед первым днем месяца
         repeat(firstDayOfWeek) {
-            daysInMonth.add(LocalDate.MIN)
+            daysInMonth.add(LocalDate.MIN)  // Заглушки для пустых ячеек
         }
 
+        // Добавляем все дни месяца
         var date = firstDayOfMonth
         while (!date.isAfter(lastDayOfMonth)) {
             daysInMonth.add(date)
@@ -59,6 +66,7 @@ fun HabitCalendar(
 
         Spacer(modifier = Modifier.height(8.dp))
 
+        // Отображаем дни недели (понедельник, вторник и т.д.)
         Row(modifier = Modifier.fillMaxWidth()) {
             DayOfWeek.values().forEach { dayOfWeek ->
                 Text(
@@ -73,6 +81,7 @@ fun HabitCalendar(
 
         Spacer(modifier = Modifier.height(4.dp))
 
+        // Отображаем дни месяца
         LazyVerticalGrid(
             columns = GridCells.Fixed(7),
             modifier = Modifier.fillMaxSize(),
@@ -82,15 +91,13 @@ fun HabitCalendar(
                         day = day,
                         isSelected = day == selectedDate,
                         isCompleted = completedDates.contains(day),
-                        onClick = {
-                            if (day != LocalDate.MIN) {
-                                selectedDate = day
-                                onDayClick(day)
-                            }
-                        }
+                        isTarget = targetDates.contains(day),
+                        onClick = { if (isSelectable) onDayClick(day) },
+                        isSelectable = isSelectable
                     )
                 }
             }
         )
     }
 }
+

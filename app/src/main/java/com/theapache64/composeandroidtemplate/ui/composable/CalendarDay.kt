@@ -24,12 +24,18 @@ fun CalendarDay(
     day: LocalDate,
     isSelected: Boolean,
     isCompleted: Boolean,
-    onClick: () -> Unit
-) {
+    isTarget: Boolean, // ← ДОБАВИТЬ ЭТО
+    onClick: () -> Unit,
+    isSelectable: Boolean
+)
+ {
     Box(
         modifier = Modifier
             .aspectRatio(1f)
-            .clickable(enabled = day != LocalDate.MIN) { onClick() },
+            .then(
+                if (isSelectable && day != LocalDate.MIN) Modifier.clickable { onClick() }
+                else Modifier
+            ),
         contentAlignment = Alignment.Center
     ) {
         if (day != LocalDate.MIN) {
@@ -38,18 +44,33 @@ fun CalendarDay(
             if (isCompleted) {
                 Canvas(modifier = Modifier.fillMaxSize()) {
                     drawCircle(
-                        color = Color(0xFF4CAF50), // Зеленый цвет для выполнения
+                        color = Color(0xFF4CAF50),
                         radius = size.minDimension / 2.5f,
                         center = Offset(size.width / 2, size.height / 2),
-                        alpha = 0.3f // чуть прозрачный
+                        alpha = 0.3f
+                    )
+                }
+            }
+            if (isTarget) {
+                Canvas(modifier = Modifier.fillMaxSize()) {
+                    drawCircle(
+                        color = Color.Red,
+                        radius = size.minDimension / 3,
+                        center = Offset(size.width / 2, size.height / 2),
+                        style = Stroke(
+                            width = 3f,
+                            pathEffect = PathEffect.dashPathEffect(floatArrayOf(8f, 8f))
+                        ),
+                        alpha = 0.8f
                     )
                 }
             }
 
+
             if (isSelected) {
                 Canvas(modifier = Modifier.fillMaxSize()) {
                     drawCircle(
-                        color = Color(0xFF3700B3), // Фиолетовый пунктир
+                        color = Color(0xFF3700B3),
                         radius = size.minDimension / 2.5f,
                         center = Offset(size.width / 2, size.height / 2),
                         style = Stroke(

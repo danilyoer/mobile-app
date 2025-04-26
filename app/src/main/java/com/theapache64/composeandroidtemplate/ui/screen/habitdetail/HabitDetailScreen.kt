@@ -1,6 +1,8 @@
 package com.theapache64.composeandroidtemplate.ui.screen.habitdetail
 
-import android.content.Context
+import java.time.Instant
+import java.time.ZoneId
+
 import androidx.compose.runtime.*
 import androidx.compose.material.*
 import androidx.compose.foundation.layout.*
@@ -46,6 +48,7 @@ fun HabitDetailScreen(fileName: String, onBack: () -> Unit = {}) {
     }
 }
 
+
 @Composable
 fun HabitDetailContent(
     habitState: MutableState<Habit?>,
@@ -53,8 +56,18 @@ fun HabitDetailContent(
     fileName: String,
     onBack: () -> Unit
 ) {
-    val context = LocalContext.current
     val habit = habitState.value
+    val context = LocalContext.current
+    val targetDates = remember(habit) {
+        habit?.let {
+            val dates = calculateTargetDates(it)
+            println("Target Dates: $dates") // Логируем результат целевых дат
+            dates
+        } ?: emptySet()
+    }
+
+
+
 
     val dateFormatted = remember(habit?.createdAt) {
         habit?.createdAt?.let {
@@ -63,13 +76,19 @@ fun HabitDetailContent(
         } ?: ""
     }
 
+    LaunchedEffect(Unit) {
+        if (selectedDate.value == null) {
+            selectedDate.value = LocalDate.now()
+        }
+    }
+
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
 
-        // Верх
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
@@ -87,8 +106,6 @@ fun HabitDetailContent(
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-
-        // Дата и напоминание
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
@@ -111,16 +128,18 @@ fun HabitDetailContent(
             Text("Сколько дней выполнено: ${it.completedDates.size}")
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Календарик
             HabitCalendar(
-                completedDates = it.completedDates.map { date -> LocalDate.parse(date) }.toSet(),
-                onDayClick = { date -> selectedDate.value = date }
+                completedDates = habit.completedDates.map { LocalDate.parse(it) }.toSet(),
+                targetDates = targetDates,  // передаем целевые дни
+                selectedDate = LocalDate.now(),
+                isSelectable = false,
+                onDayClick = {} // клик больше не нужен
             )
+
+
         }
 
         Spacer(modifier = Modifier.height(24.dp))
-
-        // Кнопка удаления
         Button(
             onClick = {
                 val dir = File(context.filesDir, "habits")
@@ -137,7 +156,6 @@ fun HabitDetailContent(
             Text("Удалить привычку", color = MaterialTheme.colors.onError)
         }
 
-        // Кнопка "Выполнено"
         if (selectedDate.value != null) {
             Spacer(modifier = Modifier.height(8.dp))
             Button(
@@ -149,13 +167,11 @@ fun HabitDetailContent(
                             val updatedHabit = habit.copy(
                                 completedDates = habit.completedDates + formattedDate
                             )
-
                             val dir = File(context.filesDir, "habits")
                             val file = File(dir, fileName)
                             if (file.exists()) {
                                 file.writeText(Json.encodeToString(Habit.serializer(), updatedHabit))
                             }
-
                             habitState.value = updatedHabit
                             selectedDate.value = null
                         }
@@ -168,3 +184,24 @@ fun HabitDetailContent(
         }
     }
 }
+private fun calculateTargetDates(habit: Habit): Set<LocalDate> {
+    val startDate = Instant.ofEpochMilli(habit.createdAt)
+        .atZone(ZoneId.systemDefault())
+        .toLocalDate()
+
+    val stepDays = when (habit.frequency) {
+        "Ежедневно" -> 1
+        "Через день" -> 2
+        "Еженедельно" -> 7
+        "Раз в месяц" -> 30
+        else -> 1
+    }
+
+    val count = habit.time.toIntOrNull() ?: 0
+
+    return (0 until count).map { offset ->
+        // Переход от первого дня без добавления лишнего дня
+        startDate.plusDays(stepDays.toLong() * offset)
+    }.toSet()
+}
+
