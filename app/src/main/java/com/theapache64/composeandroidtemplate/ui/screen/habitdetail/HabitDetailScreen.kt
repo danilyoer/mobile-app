@@ -57,6 +57,8 @@ fun HabitDetailContent(
 ) {
     val habit = habitState.value
     val context = LocalContext.current
+    val today = LocalDate.now()
+
     val targetDates = remember(habit) {
         habit?.let { calculateTargetDates(it) } ?: emptySet()
     }
@@ -68,15 +70,11 @@ fun HabitDetailContent(
         } ?: ""
     }
 
-    // Устанавливаем текущую дату, если она не выбрана
     LaunchedEffect(Unit) {
         if (selectedDate.value == null) {
-            selectedDate.value = LocalDate.now()
+            selectedDate.value = today
         }
     }
-
-    // Логика для скрытия кнопки, если день уже выполнен
-    val isCompletedToday = habit?.completedDates?.contains(selectedDate.value.toString()) ?: false
 
     Column(
         modifier = Modifier
@@ -101,6 +99,7 @@ fun HabitDetailContent(
         }
 
         Spacer(modifier = Modifier.height(16.dp))
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
@@ -125,14 +124,35 @@ fun HabitDetailContent(
 
             HabitCalendar(
                 completedDates = habit.completedDates.map { LocalDate.parse(it) }.toSet(),
-                targetDates = targetDates,  // Передаем целевые дни
-                selectedDate = LocalDate.now(),
-                isSelectable = false,
-                onDayClick = {}
+                targetDates = targetDates,
+                selectedDate = today,
+                isSelectable = true,
+                onDayClick = { clickedDate ->
+                    if (clickedDate == today) {
+                        habitState.value?.let { currentHabit ->
+                            val formattedDate = clickedDate.toString()
+                            val updatedCompletedDates = if (currentHabit.completedDates.contains(formattedDate)) {
+                                currentHabit.completedDates - formattedDate
+                            } else {
+                                currentHabit.completedDates + formattedDate
+                            }
+                            val updatedHabit = currentHabit.copy(completedDates = updatedCompletedDates)
+                            habitState.value = updatedHabit
+
+                            // Сохраняем обновление в файл
+                            val dir = File(context.filesDir, "habits")
+                            val file = File(dir, fileName)
+                            if (file.exists()) {
+                                file.writeText(Json.encodeToString(Habit.serializer(), updatedHabit))
+                            }
+                        }
+                    }
+                }
             )
         }
 
         Spacer(modifier = Modifier.height(24.dp))
+
         Button(
             onClick = {
                 val dir = File(context.filesDir, "habits")
@@ -142,42 +162,14 @@ fun HabitDetailContent(
                     onBack()
                 }
             },
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.error)
         ) {
             Text("Удалить привычку", color = MaterialTheme.colors.onError)
         }
-
-        // Кнопка "Выполнено", если день не выполнен
-        if (selectedDate.value != null && !isCompletedToday) {
-            Spacer(modifier = Modifier.height(8.dp))
-            Button(
-                onClick = {
-                    val date = selectedDate.value
-                    if (date != null && habit != null) {
-                        val formattedDate = date.toString()
-                        if (!habit.completedDates.contains(formattedDate)) {
-                            val updatedHabit = habit.copy(
-                                completedDates = habit.completedDates + formattedDate
-                            )
-                            val dir = File(context.filesDir, "habits")
-                            val file = File(dir, fileName)
-                            if (file.exists()) {
-                                file.writeText(Json.encodeToString(Habit.serializer(), updatedHabit))
-                            }
-                            habitState.value = updatedHabit
-                            selectedDate.value = null
-                        }
-                    }
-                },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Выполнено")
-            }
-        }
     }
 }
+
 
 
 

@@ -16,6 +16,9 @@ import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.*
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
+import androidx.compose.runtime.rememberCoroutineScope
 
 @Composable
 fun HabitCalendar(
@@ -27,22 +30,21 @@ fun HabitCalendar(
     targetDates: Set<LocalDate> = emptySet()
 ) {
     var currentMonth by remember { mutableStateOf(YearMonth.now()) }
+    val today = LocalDate.now()
+    val flashDates = remember { mutableStateListOf<LocalDate>() } // ← список для вспышек
+    val coroutineScope = rememberCoroutineScope()
 
-    // Определяем первый день месяца (начиная с понедельника)
     val firstDayOfMonth = currentMonth.atDay(1)
-    val firstDayOfWeek = (firstDayOfMonth.dayOfWeek.value - 1 + 7) % 7  // Понедельник = 0, воскресенье = 6
+    val firstDayOfWeek = (firstDayOfMonth.dayOfWeek.value - 1 + 7) % 7
 
-    // Создаём список дней месяца
     val days = remember(currentMonth) {
         val lastDayOfMonth = currentMonth.atEndOfMonth()
         val daysInMonth = mutableListOf<LocalDate>()
 
-        // Добавляем пустые ячейки перед первым днем месяца
         repeat(firstDayOfWeek) {
-            daysInMonth.add(LocalDate.MIN)  // Заглушки для пустых ячеек
+            daysInMonth.add(LocalDate.MIN)
         }
 
-        // Добавляем все дни месяца
         var date = firstDayOfMonth
         while (!date.isAfter(lastDayOfMonth)) {
             daysInMonth.add(date)
@@ -66,7 +68,6 @@ fun HabitCalendar(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Отображаем дни недели (понедельник, вторник и т.д.)
         Row(modifier = Modifier.fillMaxWidth()) {
             DayOfWeek.values().forEach { dayOfWeek ->
                 Text(
@@ -81,7 +82,6 @@ fun HabitCalendar(
 
         Spacer(modifier = Modifier.height(4.dp))
 
-        // Отображаем дни месяца
         LazyVerticalGrid(
             columns = GridCells.Fixed(7),
             modifier = Modifier.fillMaxSize(),
@@ -92,8 +92,25 @@ fun HabitCalendar(
                         isSelected = day == selectedDate,
                         isCompleted = completedDates.contains(day),
                         isTarget = targetDates.contains(day),
-                        onClick = { if (isSelectable) onDayClick(day) },
-                        isSelectable = isSelectable
+                        onClick = {
+                            if (day == today) {
+                                onDayClick(day)
+                            } else if (day != LocalDate.MIN) {
+                                if (!completedDates.contains(day)) {
+                                    flashDates.add(day)
+                                    coroutineScope.launch {
+                                        delay(300)
+                                        flashDates.remove(day)
+                                    }
+                                }
+
+                            }
+                        }
+
+                        ,
+                        isSelectable = isSelectable,
+                        isToday = day == today,
+                        isErrorFlash = flashDates.contains(day) // ← передаём в календарный день
                     )
                 }
             }

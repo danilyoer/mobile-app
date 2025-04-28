@@ -24,11 +24,12 @@ fun CalendarDay(
     day: LocalDate,
     isSelected: Boolean,
     isCompleted: Boolean,
-    isTarget: Boolean, // ← ДОБАВИТЬ ЭТО
+    isTarget: Boolean,
     onClick: () -> Unit,
-    isSelectable: Boolean
-)
- {
+    isSelectable: Boolean,
+    isToday: Boolean,
+    isErrorFlash: Boolean
+) {
     Box(
         modifier = Modifier
             .aspectRatio(1f)
@@ -41,16 +42,29 @@ fun CalendarDay(
         if (day != LocalDate.MIN) {
             val animatedFontSize by animateFloatAsState(targetValue = if (isSelected) 18f else 14f)
 
-            if (isCompleted) {
+            // Сначала рисуем ошибку, если есть
+            if (isErrorFlash) {
                 Canvas(modifier = Modifier.fillMaxSize()) {
                     drawCircle(
-                        color = Color(0xFF4CAF50),
+                        color = Color(0xFFFF5252), // Красная вспышка
+                        radius = size.minDimension / 2.5f,
+                        center = Offset(size.width / 2, size.height / 2),
+                        alpha = 0.3f
+                    )
+                }
+            } else if (isCompleted) {
+                // Иначе — если выполнено, зелёный фон
+                Canvas(modifier = Modifier.fillMaxSize()) {
+                    drawCircle(
+                        color = Color(0xFF4CAF50), // Зелёный выполненный
                         radius = size.minDimension / 2.5f,
                         center = Offset(size.width / 2, size.height / 2),
                         alpha = 0.3f
                     )
                 }
             }
+
+            // Целевой день (рамка)
             if (isTarget) {
                 Canvas(modifier = Modifier.fillMaxSize()) {
                     drawCircle(
@@ -66,7 +80,7 @@ fun CalendarDay(
                 }
             }
 
-
+            // Выделение выбранного дня
             if (isSelected) {
                 Canvas(modifier = Modifier.fillMaxSize()) {
                     drawCircle(
@@ -82,6 +96,7 @@ fun CalendarDay(
                 }
             }
 
+            // Само число
             Text(
                 text = day.dayOfMonth.toString(),
                 color = MaterialTheme.colors.onBackground,
