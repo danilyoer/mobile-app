@@ -84,9 +84,30 @@ fun CreateHabitScreen(
                 val timeValue = time.toIntOrNull()
                 val maxDays = getMaxDaysForFrequency(selectedFrequency)
 
+                val dir = File(context.filesDir, "habits")
+                dir.mkdirs()
+
+                val existingHabits = dir.listFiles()
+                    ?.filter { it.extension == "json" }
+                    ?.mapNotNull { file ->
+                        try {
+                            val json = file.readText()
+                            Json.decodeFromString<Habit>(json)
+                        } catch (e: Exception) {
+                            null
+                        }
+                    }
+                    ?: emptyList()
+
+                val isNameDuplicate = existingHabits.any { it.name.equals(habitName.trim(), ignoreCase = true) }
+
                 when {
                     habitName.length < 3 || habitName.length > 35 -> {
                         errorMessage = "Название привычки должно содержать от 3 до 35 символов"
+                        showErrorDialog = true
+                    }
+                    isNameDuplicate -> {
+                        errorMessage = "Привычка с таким названием уже существует, выберите другое название"
                         showErrorDialog = true
                     }
                     timeValue == null || timeValue !in 1..maxDays -> {
@@ -95,7 +116,7 @@ fun CreateHabitScreen(
                     }
                     else -> {
                         val habit = Habit(
-                            name = habitName,
+                            name = habitName.trim(),
                             frequency = selectedFrequency,
                             category = selectedCategory,
                             time = time,
@@ -104,9 +125,6 @@ fun CreateHabitScreen(
                         )
                         val json = Json.encodeToString(habit)
 
-                        val dir = File(context.filesDir, "habits")
-                        dir.mkdirs()
-
                         val fileName = "habit_${System.currentTimeMillis()}.json"
                         val file = File(dir, fileName)
                         file.writeText(json)
@@ -114,6 +132,7 @@ fun CreateHabitScreen(
                     }
                 }
             }
+
         )
 
     }
