@@ -12,6 +12,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.File
 import com.theapache64.composeandroidtemplate.R
+import androidx.compose.ui.platform.testTag
 
 @Composable
 fun CreateHabitScreen(
@@ -41,6 +42,7 @@ fun CreateHabitScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
+            .testTag("CreateHabitScreenBox")
     ) {
         BackButtonRow(onBack = onNavigateBackToMain)
         Spacer(modifier = Modifier.height(32.dp))

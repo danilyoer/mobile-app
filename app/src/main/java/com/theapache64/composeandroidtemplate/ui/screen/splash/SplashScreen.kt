@@ -23,7 +23,7 @@ import com.theapache64.composeandroidtemplate.R
 import com.theapache64.composeandroidtemplate.data.model.Habit
 import com.theapache64.composeandroidtemplate.data.model.HabitItem
 import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
+import androidx.compose.ui.platform.testTag
 import kotlinx.serialization.json.Json
 import java.io.File
 import java.time.LocalDate
@@ -49,7 +49,9 @@ fun SplashScreen(
         todayHabits = loadTodayHabits(context)
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .testTag("SplashScreenBox")) {
 
         // Версия приложения
         val versionName by viewModel.versionName.collectAsState()
@@ -97,7 +99,9 @@ fun SplashScreen(
                     backgroundColor = Color.Blue,
                     contentColor = Color.White
                 ),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier                 // <<< добавь цепочку
+                    .fillMaxWidth()
+                    .testTag("CreateHabitButton")
             ) {
                 Text("Создать привычку")
             }
