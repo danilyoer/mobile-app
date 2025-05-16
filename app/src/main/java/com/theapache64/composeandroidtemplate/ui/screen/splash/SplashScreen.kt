@@ -99,7 +99,7 @@ fun SplashScreen(
                     backgroundColor = Color.Blue,
                     contentColor = Color.White
                 ),
-                modifier = Modifier                 // <<< добавь цепочку
+                modifier = Modifier
                     .fillMaxWidth()
                     .testTag("CreateHabitButton")
             ) {
@@ -114,7 +114,9 @@ fun SplashScreen(
                     backgroundColor = Color.Blue,
                     contentColor = Color.White
                 ),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("HabitListButton")
             ) {
                 Text("Мои привычки")
             }

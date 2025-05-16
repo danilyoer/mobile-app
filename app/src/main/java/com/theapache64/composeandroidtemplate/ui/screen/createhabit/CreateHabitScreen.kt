@@ -44,7 +44,9 @@ fun CreateHabitScreen(
             .padding(16.dp)
             .testTag("CreateHabitScreenBox")
     ) {
+
         BackButtonRow(onBack = onNavigateBackToMain)
+
         Spacer(modifier = Modifier.height(32.dp))
         HabitNameField(habitName) { habitName = it }
         Spacer(modifier = Modifier.height(16.dp))

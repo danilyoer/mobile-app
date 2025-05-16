@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.theapache64.composeandroidtemplate.data.model.Habit
 import androidx.compose.foundation.lazy.items
-
+import androidx.compose.ui.platform.testTag
 
 
 @Composable
@@ -32,6 +32,7 @@ fun SecondScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .testTag("SecondScreenBox")
             .padding(16.dp)
     ) {
         // Кнопка "Назад"

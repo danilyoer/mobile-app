@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.platform.testTag
 
 @Composable
 fun BackButtonRow(onBack: () -> Unit) {
@@ -21,6 +22,7 @@ fun BackButtonRow(onBack: () -> Unit) {
         Text(
             text = "Назад",
             modifier = Modifier
+                .testTag("CreateBackButton")
                 .clickable { onBack() }
                 .padding(8.dp),
             color = MaterialTheme.colors.primary

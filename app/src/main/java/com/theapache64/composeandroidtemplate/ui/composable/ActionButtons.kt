@@ -5,7 +5,9 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.testTag
 
 @Composable
 fun ActionButtons(
@@ -22,6 +24,7 @@ fun ActionButtons(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp)
+
         ) {
             Text(text = "Сохранить", color = MaterialTheme.colors.onPrimary)
         }
@@ -34,6 +37,7 @@ fun ActionButtons(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(45.dp)
+                .testTag("CancelHabitScreenBox")
         ) {
             Text(text = "Отмена", color = MaterialTheme.colors.onSurface)
         }
