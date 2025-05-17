@@ -1,4 +1,4 @@
-package com.theapache64.composeandroidtemplate
+package com.theapache64.composeandroidtemplate.UiTests.Navigation
 
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
@@ -11,7 +11,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class CreateCancelToSplashTest {
+class CreateBackToSplashTest {
 
     @get:Rule
     val rule = createAndroidComposeRule<MainActivity>()
@@ -20,8 +20,8 @@ class CreateCancelToSplashTest {
         // Splash → CreateHabit
         rule.onNodeWithTag("CreateHabitButton").performClick()
         Thread.sleep(1_000)
-        // кликаем по "отмена" (кликабельный Text)
-        rule.onNodeWithTag("CancelHabitScreenBox").performClick()
+        // кликаем по "Назад" (кликабельный Text)
+        rule.onNodeWithTag("CreateBackButton").performClick()
         Thread.sleep(1_000)
 
         Thread.sleep(1_000)

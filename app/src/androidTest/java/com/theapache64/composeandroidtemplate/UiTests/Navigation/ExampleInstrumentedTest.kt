@@ -1,4 +1,4 @@
-package com.theapache64.composeandroidtemplate
+package com.theapache64.composeandroidtemplate.UiTests.Navigation
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry

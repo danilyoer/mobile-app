@@ -1,4 +1,4 @@
-package com.theapache64.composeandroidtemplate
+package com.theapache64.composeandroidtemplate.UiTests.Navigation
 
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
