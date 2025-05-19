@@ -15,7 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.sp
 import java.time.LocalDate
 
@@ -32,6 +32,7 @@ fun CalendarDay(
 ) {
     Box(
         modifier = Modifier
+            .testTag("CalendarDay_${day}")
             .aspectRatio(1f)
             .then(
                 if (isSelectable && day != LocalDate.MIN) Modifier.clickable { onClick() }
