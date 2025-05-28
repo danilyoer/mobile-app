@@ -10,6 +10,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
 
+fun isValidTimeInput(input: String, maxDays: Int): Boolean =
+    input.toIntOrNull()?.let { it in 1..maxDays } ?: input.isEmpty()
+
 @Composable
 fun TimeField(time: String, onValueChange: (String) -> Unit, maxDays: Int) {
     OutlinedTextField(
@@ -20,6 +23,6 @@ fun TimeField(time: String, onValueChange: (String) -> Unit, maxDays: Int) {
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         modifier = Modifier
             .fillMaxWidth()
-            .testTag("TimeField")                      // остаётся как есть
+            .testTag("TimeField")
     )
 }

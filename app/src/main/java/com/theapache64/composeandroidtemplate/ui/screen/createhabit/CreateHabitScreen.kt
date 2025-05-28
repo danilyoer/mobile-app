@@ -13,6 +13,9 @@ import kotlinx.serialization.json.Json
 import java.io.File
 import com.theapache64.composeandroidtemplate.R
 import androidx.compose.ui.platform.testTag
+import com.theapache64.composeandroidtemplate.ui.composable.getMaxDaysForFrequency
+import com.theapache64.composeandroidtemplate.ui.composable.isValidTimeInput
+
 
 @Composable
 fun CreateHabitScreen(
@@ -56,19 +59,20 @@ fun CreateHabitScreen(
             isDropdownExpanded = isFrequencyDropdownExpanded,
             onFrequencySelected = { selectedFrequency = it },
             onDropdownExpandedChange = { isFrequencyDropdownExpanded = it },
-            options = frequencies // <-- передаём список!
+            options = frequencies
         )
 
         Spacer(modifier = Modifier.height(16.dp))
         TimeField(
             time = time,
             onValueChange = { newTime ->
-                if (newTime.isEmpty() || newTime.toIntOrNull()?.let { it in 1..maxDays } == true) {
+                if (isValidTimeInput(newTime, maxDays)) {
                     time = newTime
                 }
             },
             maxDays = maxDays
         )
+
 
         Spacer(modifier = Modifier.height(16.dp))
         ReminderSwitch(isReminderEnabled) { isReminderEnabled = it }
@@ -154,14 +158,6 @@ fun CreateHabitScreen(
         )
     }
 }
-private fun getMaxDaysForFrequency(frequency: String): Int {
-    return when (frequency) {
-        "Ежедневно" -> 365
-        "Через день" -> 180
-        "Еженедельно" -> 54
-        "Раз в месяц" -> 12
-        else -> 365
-    }
-}
+
 
 private val categories = listOf("Здоровье", "Продуктивность", "Спорт", "Обучение", "Другое")

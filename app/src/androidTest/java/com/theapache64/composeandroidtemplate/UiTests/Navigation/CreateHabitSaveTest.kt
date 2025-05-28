@@ -17,21 +17,24 @@ class CreateHabitSaveTest {
 
     @Test
     fun createHabit_and_navigate_to_secondScreen() {
-        // 1) Splash → CreateHabit
+        // переход Splash → CreateHabit
         rule.onNodeWithTag("CreateHabitButton").performClick()
         Thread.sleep(1_000)
-        // 2) заполняем поля (первые два TextField'а на экране)
+
+        // заполняем поля (первые два TextField'а на экране)
         val uniqueName = "Habit_${Random.nextInt(1000, 9999)}"
-        rule.onAllNodes(hasSetTextAction())[0].performTextInput(uniqueName)  // название
+        rule.onAllNodes(hasSetTextAction())[0].performTextInput(uniqueName)
         Thread.sleep(1_000)
-        rule.onNodeWithTag("TimeField").performTextInput("10")        // время
+
+        rule.onNodeWithTag("TimeField").performTextInput("10")
         Thread.sleep(1_000)
-        // 3) жмём «Сохранить»
+        // Сохраняем введенный текст
         rule.onNodeWithText("Сохранить").performClick()
         Thread.sleep(1_000)
-        // 4) ждём навигацию и убеждаемся, что открылась SecondScreen
+
+        // убеждаемся, что открылась SecondScreen
         rule.waitForIdle()
         rule.onNodeWithTag("SecondScreenBox").assertIsDisplayed()
-        Thread.sleep(1_000)
+        Thread.sleep(3_000)
     }
 }

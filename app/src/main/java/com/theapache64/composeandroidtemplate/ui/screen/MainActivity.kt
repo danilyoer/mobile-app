@@ -84,16 +84,19 @@ class MainActivity : ComponentActivity() {
             }
 
             //CreateHabit
+
             composable(Screen.CreateHabit.route) {
                 CreateHabitScreen(
                     onNavigateBackToMain = {
                         navController.popBackStack()
                     },
                     onNavigateToSecondScreen = {
-                        navController.navigate(Screen.Second.route)
+                        //navController.navigate(Screen.Second.route)
+                        navController.navigate(Screen.CreateHabit.route)
                     }
                 )
             }
+
             //habit detail
             composable(
                 route = Screen.HabitDetail.route,

@@ -21,12 +21,9 @@ class SplashToSecondTest {
         // 1) жмём «Мои привычки» на SplashScreen
         rule.onNodeWithTag("HabitListButton")
             .performClick()
-
         // 2) убеждаемся, что появился SecondScreen
         rule.onNodeWithTag("SecondScreenBox")
             .assertIsDisplayed()
-
-
         Thread.sleep(2_000)
     }
 }
